@@ -24,6 +24,8 @@
             --accent-dim: rgba(0,212,255,0.08);
             --accent-mid: rgba(0,212,255,0.16);
             --accent-glow: rgba(0,212,255,0.24);
+            --glow-1: rgba(0,212,255,0.15);
+            --glow-2: rgba(0,140,255,0.12);
             --btn: #0e1e35;
             --btn-h: #162a45;
             --btn-a: #1e3555;
@@ -32,7 +34,7 @@
             --eq-h: #00b4d8;
             --eq-a: #0096b7;
             --rpl: rgba(255,255,255,0.08);
-            --shadow-a: 0.30;
+            --shadow-a: 0.35;
         }
 
         /* THEME 2: MÙA THU (Autumn) */
@@ -46,6 +48,8 @@
             --accent-dim: rgba(232,146,12,0.08);
             --accent-mid: rgba(232,146,12,0.16);
             --accent-glow: rgba(232,146,12,0.24);
+            --glow-1: rgba(232,146,12,0.15);
+            --glow-2: rgba(255,100,0,0.12);
             --btn: #2a1e14;
             --btn-h: #382a1e;
             --btn-a: #463628;
@@ -54,7 +58,7 @@
             --eq-h: #d07a08;
             --eq-a: #b06808;
             --rpl: rgba(255,255,255,0.08);
-            --shadow-a: 0.28;
+            --shadow-a: 0.33;
         }
 
         /* THEME 3: VŨ TRỤ (Cosmos) */
@@ -68,6 +72,8 @@
             --accent-dim: rgba(168,85,247,0.08);
             --accent-mid: rgba(168,85,247,0.16);
             --accent-glow: rgba(168,85,247,0.24);
+            --glow-1: rgba(168,85,247,0.15);
+            --glow-2: rgba(100,50,255,0.12);
             --btn: #1a1230;
             --btn-h: #251a42;
             --btn-a: #302254;
@@ -76,7 +82,7 @@
             --eq-h: #9333ea;
             --eq-a: #7e22ce;
             --rpl: rgba(255,255,255,0.08);
-            --shadow-a: 0.30;
+            --shadow-a: 0.35;
         }
 
         /* THEME 4: BÓNG MA (Haunted) */
@@ -90,6 +96,8 @@
             --accent-dim: rgba(110,231,183,0.08);
             --accent-mid: rgba(110,231,183,0.16);
             --accent-glow: rgba(110,231,183,0.24);
+            --glow-1: rgba(110,231,183,0.15);
+            --glow-2: rgba(40,160,180,0.12);
             --btn: #181c28;
             --btn-h: #202636;
             --btn-a: #283044;
@@ -98,7 +106,7 @@
             --eq-h: #4ade80;
             --eq-a: #22c55e;
             --rpl: rgba(255,255,255,0.08);
-            --shadow-a: 0.28;
+            --shadow-a: 0.33;
         }
 
         /* =============================================
@@ -119,26 +127,33 @@
         html {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
+            height: 100%; /* For fullscreen block */
+            width: 100%;
+            overflow: hidden;
+            overscroll-behavior: none; /* Ngăn chặn Pull-to-refresh và bounce */
         }
         body {
             background: var(--bg);
             color: var(--text-1);
-            min-height: 100vh; min-height: 100dvh;
+            height: 100%; height: 100dvh;
             display: flex; align-items: center; justify-content: center;
             touch-action: manipulation;
-            overflow: hidden;
+            overflow: hidden !important;
+            overscroll-behavior: none;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            -webkit-user-select: none;
             transition: background var(--t-slow) var(--ease);
         }
         body::before {
             content: '';
             position: fixed; inset: 0;
             background:
-                radial-gradient(ellipse 60% 50% at 30% 60%, var(--accent-dim) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 40% at 70% 30%, var(--accent-dim) 0%, transparent 60%);
+                radial-gradient(ellipse 90% 80% at 15% 90%, var(--glow-1) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 90% at 85% 10%, var(--glow-2) 0%, transparent 60%);
             pointer-events: none;
-            transition: background var(--t-slow) var(--ease);
+            transition: background 0.8s ease;
+            z-index: -1;
         }
 
         /* =============================================
@@ -153,6 +168,14 @@
             opacity: 0;
             transform: translateY(20px) scale(0.97);
             animation: enter 0.5s var(--ease-expo) 0.06s forwards;
+            height: 100%; /* Fallback */
+            height: 100dvh; /* Dynamic Viewport - tự động thu phóng cùng thanh điều hướng */
+            width: auto;
+            aspect-ratio: 9 / 19;
+            max-width: 100vw;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: env(safe-area-inset-bottom, 0px); /* Tự động né thanh bar của iOS */
         }
         @keyframes enter { to { opacity:1; transform:none; } }
 
@@ -170,11 +193,14 @@
         .calc {
             position: relative;
             z-index: 1;
-            width: 100%; max-width: 370px; min-width: 290px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             background: var(--surface);
             padding: 24px;
             border-radius: 22px;
-            box-shadow: 0 8px 32px rgba(0,0,0,var(--shadow-a));
+            box-shadow: 0 14px 44px rgba(0,0,0,var(--shadow-a)), 0 4px 12px rgba(0,0,0,calc(var(--shadow-a) * 0.4));
             transition: background var(--t-slow) var(--ease),
                         box-shadow var(--t-slow) var(--ease);
             overflow: hidden;
@@ -191,7 +217,7 @@
             overflow: hidden;
             border-radius: inherit;
         }
-        .d { position: absolute; opacity: 0; }
+        .d { position: absolute; opacity: 0; will-change: transform, opacity; }
 
 /* =========================================================
            OCEAN — Bubbles, diverse sea creatures, lush seaweed, currents
@@ -631,50 +657,6 @@
             transition: transform var(--t-slow) var(--ease);
         }
 
-        /* Info tooltip */
-        .info-btn { position: relative; }
-        .itip {
-            position: absolute;
-            top: calc(100% + 10px); right: -10px;
-            width: 230px;
-            background: var(--surface);
-            border: 1px solid var(--bdr-l);
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 12px; font-weight: 400; line-height: 1.7;
-            color: var(--text-2);
-            box-shadow: 0 8px 28px rgba(0,0,0,0.3);
-            opacity: 0; visibility: hidden;
-            transform: translateY(-4px);
-            transition: opacity var(--t-med) var(--ease),
-                        visibility var(--t-med),
-                        transform var(--t-med) var(--ease);
-            pointer-events: none;
-            z-index: 50;
-        }
-        .itip::before {
-            content: '';
-            position: absolute;
-            top:-5px; right:16px;
-            width:10px; height:10px;
-            background: var(--surface);
-            border-left:1px solid var(--bdr-l);
-            border-top:1px solid var(--bdr-l);
-            transform: rotate(45deg);
-        }
-        .info-btn:hover .itip,
-        .info-btn:focus .itip {
-            opacity:1; visibility:visible;
-            transform:none; pointer-events:auto;
-        }
-        .itip strong { color: var(--accent); display:block; margin-bottom:4px; font-size:13px; }
-        .itip em {
-            color: var(--text-1); font-style:normal;
-            background: var(--accent-dim);
-            padding:2px 8px; border-radius:4px;
-            display:inline-block; margin-top:6px; font-size:11px;
-        }
-
         /* =============================================
            DISPLAY
            ============================================= */
@@ -682,9 +664,10 @@
             background: var(--display);
             padding: 18px 18px 14px;
             border-radius: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             border: 1px solid var(--bdr);
-            min-height: 100px;
+            flex: 0 0 22%;
+            min-height: 90px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -742,10 +725,11 @@
         .keys {
             display: grid;
             grid-template-columns: repeat(4,1fr);
+            grid-template-rows: repeat(5,1fr);
             gap: 12px;
+            flex: 1;
         }
         .k {
-            aspect-ratio: 1;
             border: 1px solid transparent;
             border-radius: 10px;
             font-family: 'Inter', sans-serif;
@@ -780,6 +764,7 @@
             transform: scale(0); opacity:1;
             animation: rpl 0.4s var(--ease) forwards;
             pointer-events: none;
+            will-change: transform, opacity;
         }
         @keyframes rpl { to { transform:scale(3.5); opacity:0; } }
 
@@ -864,30 +849,17 @@
         }
         .hclose:hover { background:var(--btn-h); }
 
-        /* =============================================
-           THEME DOTS
-           ============================================= */
-        .dots {
-            display:flex; justify-content:center; gap:8px;
-            margin-top:16px;
-            opacity:0; animation: fadeIn 0.4s var(--ease) 0.8s forwards;
-        }
-        .dot {
-            width:6px; height:6px; border-radius:50%;
-            background: var(--text-2); opacity:0.3;
-            transition: opacity var(--t-med) var(--ease),
-                        transform var(--t-med) var(--ease),
-                        background var(--t-med) var(--ease);
-            cursor: pointer;
-        }
-        .dot.on { opacity:1; transform:scale(1.4); background:var(--accent); }
-
+        /* THEME DOTS REMOVED */
         /* =============================================
            RESPONSIVE
            ============================================= */
         @media (max-width:480px) {
-            .calc { padding:20px; border-radius:20px; }
-            .wrap { border-radius:22px; margin:14px; }
+            .calc { 
+                padding:16px; 
+                padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); /* an toàn cho thanh dưới iPhone */
+                border-radius:0px; 
+            }
+            .wrap { border-radius:0px; margin:0px; width:100vw; }
             .val { font-size:28px; }
             .k { font-size:18px; border-radius:8px; }
             .keys { gap:10px; }
@@ -935,15 +907,6 @@
         <div class="hdr">
             <h1>Cộng Lùi</h1>
             <div class="hdr-r">
-                <button class="ib info-btn" aria-label="Thông tin công thức" tabindex="0">
-                    ?
-                    <div class="itip" role="tooltip">
-                        <strong>Công thức Cộng Lùi</strong>
-                        Nhập các số %, ngăn cách bởi dấu +<br>
-                        Kết quả = 1 − (1−a)(1−b)(1−c)…<br>
-                        <em>VD: 10 + 20 → 28,00%</em>
-                    </div>
-                </button>
                 <button class="ib" id="histBtn" aria-label="Xem lịch sử">⏱</button>
                 <button class="ib" id="themeBtn" aria-label="Đổi giao diện"><span class="ti" id="ti">◐</span></button>
             </div>
@@ -976,13 +939,6 @@
         </div>
     </div>
 
-    <!-- Theme dots -->
-    <div class="dots" id="dots">
-        <span class="dot on" data-i="0"></span>
-        <span class="dot" data-i="1"></span>
-        <span class="dot" data-i="2"></span>
-        <span class="dot" data-i="3"></span>
-    </div>
 </div>
 
 <script>
@@ -998,7 +954,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const hc      = $('hc');
     const themeBtn= $('themeBtn');
     const ti      = $('ti');
-    const dots    = $('dots');
 
     let input = '0';
     let hasResult = false;
@@ -1016,18 +971,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function setTheme(anim) {
         document.documentElement.setAttribute('data-theme', T[tIdx]);
         ti.style.transform = `rotate(${tIdx * 90}deg)`;
-        dots.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i === tIdx));
         try { localStorage.setItem('cl-t', T[tIdx]); } catch(e) {}
     }
 
     themeBtn.addEventListener('click', () => {
         tIdx = (tIdx + 1) % T.length;
-        setTheme(true);
-    });
-    dots.addEventListener('click', e => {
-        const d = e.target.closest('.dot');
-        if (!d) return;
-        tIdx = +d.dataset.i;
         setTheme(true);
     });
 
